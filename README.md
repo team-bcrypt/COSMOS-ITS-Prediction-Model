@@ -369,6 +369,11 @@ Hybrid Accuracy: 0.9040 (90.40%)
 ✅ Hybrid approach improves accuracy by 0.80% over best single model!
 
 ```
+- Sample Pictures of Confusion Matrix for all models
+![alt text](image.png)
+
+- Hybrid Confusion Matrix
+![alt text](image-1.png)
 
 ### **Sample Predictions (First 20 Students):**
 
