@@ -265,6 +265,15 @@ Predicted Final Exam = (Expected Performance / 100) × 40 + GPA Trend Adjustment
 #   - feature_scaler.joblib
 ```
 
+#### **Cell 10.5: Load Models from Disk**
+```python
+# Loads pre-trained models from ./models/ directory
+#   - rf_enhanced_predictor.joblib
+#   - gb_predictor.joblib
+#   - mlp_enhanced_predictor.joblib
+#   - feature_scaler.joblib
+```
+
 #### **Cell 11: Evaluation & Visualizations**
 ```python
 # Error distribution analysis
@@ -310,7 +319,7 @@ Execute cells **sequentially** in `COSMOS_Prediction_Model.ipynb` to evaluate an
   Cells 11 
   ```
 - Evaluate Hybrid Prediction Strategy
-  ```
+```
   Cells 12  
   ```
 - Make Predictions on New Data (Hybrid Strategy) 
