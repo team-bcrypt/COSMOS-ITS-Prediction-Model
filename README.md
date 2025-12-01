@@ -189,15 +189,10 @@ Predicted Final Exam = (Expected Performance / 100) × 40 + GPA Trend Adjustment
 
 ## 🚀 Quick Start
 
-### **Prerequisites**
 
-```bash
-pip install numpy pandas scikit-learn matplotlib seaborn joblib
-```
+### **Description of the Prediction Model**
 
-### **Running the Jupyter Notebook**
 
-Execute cells **sequentially** in `COSMOS_Prediction_Model.ipynb`:
 
 #### **Cell 1: Environment Setup**
 ```python
@@ -294,114 +289,22 @@ Execute cells **sequentially** in `COSMOS_Prediction_Model.ipynb`:
 
 ## 💻 Usage
 
-### **1️⃣ Load Pre-trained Models**
+Everything is already set up in the Jupyter notebook `COSMOS_Prediction_Model.ipynb`.
+Execute cells **sequentially** in `COSMOS_Prediction_Model.ipynb` to evaluate and use the models.:
 
-```python
-import joblib
-import pandas as pd
-import numpy as np
 
-# Load models
-rf_model = joblib.load('models/rf_enhanced_predictor.joblib')
-gb_model = joblib.load('models/gb_predictor.joblib')  # Best overall
-mlp_model = joblib.load('models/mlp_enhanced_predictor.joblib')  # Best for edge grades
-scaler = joblib.load('models/feature_scaler.joblib')
-
-print("✅ Models loaded successfully!")
-```
-
-### **2️⃣ Prepare Input Data**
-
-```python
-# Load dataset
-df = pd.read_csv('cosmos_its_1000_students.csv')
-
-# Feature engineering (see Cell 5 in notebook)
-# ... feature extraction code ...
-
-# Select 20 features
-feature_cols = [
-    "cgpa", "cgpa_scaled", "current_trimester", "prev_trimester_gpa", "gpa_trend", "cgpa_gpa_diff",
-    "prog_chain_avg", "english_avg", "math_avg", "lab_core_avg", "theory_se_avg", "gen_ed_avg",
-    "overall_prev_avg", "prog_chain_std",
-    "curr_ct", "curr_assignment", "curr_attendance", "curr_mid", "curr_total", "curr_percentage"
-]
-
-X = df[feature_cols].fillna(0).astype(float)
-```
-
-### **3️⃣ Hybrid Prediction Strategy** ⚡ *Recommended*
-
-```python
-def predict_grade_hybrid(features_df):
-    """
-    Hybrid prediction using Gradient Boosting for overall predictions
-    and MLP for edge grades (A, A-, D, F)
-    """
-    # Gradient Boosting prediction (general)
-    gb_predictions = gb_model.predict(features_df)
-    
-    # MLP prediction (edge grades)
-    X_scaled = scaler.transform(features_df)
-    mlp_predictions = mlp_model.predict(X_scaled)
-    
-    # Convert to grades
-    def score_to_grade(score):
-        if score >= 90: return "A"
-        if score >= 86: return "A-"
-        if score >= 82: return "B+"
-        if score >= 78: return "B"
-        if score >= 74: return "B-"
-        if score >= 70: return "C+"
-        if score >= 66: return "C"
-        if score >= 62: return "C-"
-        if score >= 58: return "D+"
-        if score >= 55: return "D"
-        return "F"
-    
-    final_predictions = []
-    
-    for gb_score, mlp_score in zip(gb_predictions, mlp_predictions):
-        gb_grade = score_to_grade(gb_score)
-        mlp_grade = score_to_grade(mlp_score)
-        
-        # Use MLP for edge grades (A, A-, D, F)
-        if mlp_grade in ["A", "A-", "D", "F"]:
-            final_predictions.append((mlp_score, mlp_grade, "MLP"))
-        else:
-            final_predictions.append((gb_score, gb_grade, "GB"))
-    
-    return final_predictions
-
-# Make predictions
-predictions = predict_grade_hybrid(X)
-
-# Display results
-for i, (score, grade, model) in enumerate(predictions[:5]):
-    print(f"Student {i+1}: {score:.1f} → {grade} (via {model})")
-```
-
-**Output:**
-```
-Student 1: 93.2 → A (via MLP)       # Edge grade - MLP used
-Student 2: 69.5 → C (via GB)        # Mid-range - GB used
-Student 3: 75.1 → B- (via GB)       # Mid-range - GB used
-Student 4: 72.4 → C+ (via GB)       # Mid-range - GB used
-Student 5: 54.2 → F (via MLP)       # Edge grade - MLP used
-```
-
-### **4️⃣ Single Model Prediction** (Alternative)
-
-```python
-# Use Gradient Boosting only (recommended for general use)
-gb_predictions = gb_model.predict(X)
-predicted_grades = [score_to_grade(score) for score in gb_predictions]
-
-# Use MLP only (for edge grade focus)
-X_scaled = scaler.transform(X)
-mlp_predictions = mlp_model.predict(X_scaled)
-predicted_grades = [score_to_grade(score) for score in mlp_predictions]
-```
++- Load Models from `./models/` directory
++```
++  Cells 10.5 
++  ```
++- Evaluate all Models and Visualizations
++```
++  Cells 11 
++  ```
++- Evaluate Hybrid Prediction Strategy
++  ```
++  Cells 12  
++  ```
 
 ---
 
