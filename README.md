@@ -285,6 +285,14 @@ Predicted Final Exam = (Expected Performance / 100) × 40 + GPA Trend Adjustment
 #   - Generates hybrid confusion matrix
 ```
 
+#### **Cell 12.5: Making Predictions on New Data**
+```python
+# Makes predictions on new student data using hybrid strategy
+# Loads models from ./models/ directory
+# Recreates test dataset features
+# Outputs predictions with detailed comparison
+```
+
 ---
 
 ## 💻 Usage
@@ -293,18 +301,22 @@ Everything is already set up in the Jupyter notebook `COSMOS_Prediction_Model.ip
 Execute cells **sequentially** in `COSMOS_Prediction_Model.ipynb` to evaluate and use the models.:
 
 
-+- Load Models from `./models/` directory
-+```
-+  Cells 10.5 
-+  ```
-+- Evaluate all Models and Visualizations
-+```
-+  Cells 11 
-+  ```
-+- Evaluate Hybrid Prediction Strategy
-+  ```
-+  Cells 12  
-+  ```
+- Load Models from `./models/` directory
+```
+  Cells 10.5 
+  ```
+- Evaluate all Models and Visualizations
+```
+  Cells 11 
+  ```
+- Evaluate Hybrid Prediction Strategy
+  ```
+  Cells 12  
+  ```
+- Make Predictions on New Data (Hybrid Strategy) 
+```
+  Cells 12.5 
+```
 
 ---
 
