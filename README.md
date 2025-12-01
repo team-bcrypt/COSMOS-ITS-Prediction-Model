@@ -2,7 +2,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.0%2B-orange.svg)](https://scikit-learn.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 
 A machine learning system for predicting student final grades in the **COSMOS Intelligent Tutoring System (ITS)**. This model uses advanced ensemble learning techniques to predict course performance based on historical academic data, current semester progress, and related course correlations.
 
@@ -270,21 +270,24 @@ Execute cells **sequentially** in `COSMOS_Prediction_Model.ipynb`:
 #   - feature_scaler.joblib
 ```
 
-#### **Cell 11: Evaluation & Visualizations** *(Optional)*
+#### **Cell 11: Evaluation & Visualizations**
 ```python
 # Error distribution analysis
-# Confusion matrices
-# Sample predictions table
+# Confusion matrices for all 3 models
+# Per-grade accuracy comparison
+# Feature importance plots
+# Classification reports
 ```
 
-#### **Cell 12: Comprehensive Evaluation** ⭐ *Recommended*
+#### **Cell 12: Hybrid Prediction Strategy** ⭐ *Recommended*
 ```python
-# Full performance report with:
-#   - Confusion matrices for all 3 models
-#   - Per-grade accuracy analysis
-#   - Error distribution plots
-#   - Classification reports
-#   - Feature importance visualization
+# Implements hybrid approach combining GB + MLP:
+#   - Uses Gradient Boosting for mid-range grades (B+ to C-)
+#   - Uses MLP for edge grades (A, A-, D, F)
+#   - Achieves 90%+ effective accuracy
+#   - Displays model usage statistics
+#   - Shows per-grade performance breakdown
+#   - Generates hybrid confusion matrix
 ```
 
 ---
@@ -414,13 +417,40 @@ Random Forest:       0.8680 (86.80%)
 Gradient Boosting:   0.8960 (89.60%)  ⭐ Best Overall
 MLP Neural Network:  0.8880 (88.80%)  ⭐ Best for Edge Grades
 ============================================================
+
+🎯 HYBRID PREDICTION STRATEGY
+======================================================================
+Strategy: Use GB for overall predictions + MLP for edge grades (A, A-, D, F)
+======================================================================
+
+
+📊 HYBRID MODEL PERFORMANCE
+======================================================================
+Hybrid Accuracy: 0.9040 (90.40%)
+======================================================================
+
+🔧 Model Usage Statistics:
+   Gradient Boosting: 244 predictions (97.6%)
+   MLP Neural Network: 6 predictions (2.4%)
+
+======================================================================
+🏆 MODEL COMPARISON (Including Hybrid)
+======================================================================
+              Model  Accuracy Accuracy %
+      Random Forest     0.868     86.80%
+  Gradient Boosting     0.896     89.60%
+ MLP Neural Network     0.888     88.80%
+🎯 HYBRID (GB + MLP)     0.904     90.40%
+
+✅ Hybrid approach improves accuracy by 0.80% over best single model!
+
 ```
 
 ### **Sample Predictions (First 20 Students):**
 
 | Actual_Score | Actual_Grade | RF_Pred | RF_Grade | GB_Pred | GB_Grade | MLP_Pred | MLP_Grade |
 |--------------|--------------|---------|----------|---------|----------|----------|-----------|
-| 92.0         | A            | 85.1    | B+       | 86.8    | A-       | **93.2** | **A** ✅  |
+| 92.0         | A            | 85.1    | B+       | 86.8    | A-       | **93.2** | **A**     |
 | 69.0         | C            | 69.7    | C        | 69.5    | C        | 69.4     | C         |
 | 75.0         | B-           | 75.7    | B-       | 75.1    | B-       | 74.9     | B-        |
 | 73.0         | C+           | 72.8    | C+       | 72.4    | C+       | 72.9     | C+        |
@@ -595,5 +625,5 @@ For questions or support:
 
 **Made with ❤️ for better student outcomes**
 
-**Latest Update:** December 2025 - Achieved 90%+ effective accuracy with hybrid prediction strategy 🎉
+**Latest Update:** December 2025 - Achieved ~90% effective accuracy with hybrid prediction strategy 🎉
 
