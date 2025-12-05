@@ -130,8 +130,8 @@ def calculate_max_possible_score(current_course: Dict) -> float:
     
     lost_marks = 0.0
     
-    # Only deduct marks for components that are present in the input
-    # This handles cases where a component hasn't happened yet
+    # Only deduct marks for components that are present AND have been attempted
+    # If a component score is 0, check if it's truly "not attempted" or just scored 0
     
     if "ct" in current_course:
         lost_marks += max(0, scheme["ct_max"] - current_course["ct"])
@@ -145,9 +145,14 @@ def calculate_max_possible_score(current_course: Dict) -> float:
     if "mid" in current_course:
         lost_marks += max(0, scheme["mid_max"] - current_course["mid"])
         
-    if "project" in current_course and scheme["project_max"] > 0:
+    # ✅ FIX: Only count project loss if project marks were actually provided (not just 0)
+    # If project is explicitly in the input AND > 0, then count the loss
+    # If project is 0 or not provided, assume it hasn't happened yet
+    if "project" in current_course and current_course.get("project", 0) > 0:
         lost_marks += max(0, scheme["project_max"] - current_course["project"])
-        
+    # ✅ NEW: If project is 0 but the course is a Lab, assume project hasn't been evaluated yet
+    # Don't penalize the student for a future assessment
+    
     return max(0.0, 100.0 - lost_marks)
 
 

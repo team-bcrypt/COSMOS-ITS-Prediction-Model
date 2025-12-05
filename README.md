@@ -459,6 +459,34 @@ D        2       0.8%
 
 ---
 
+## 📂 Project Structure
+
+```
+COSMOS-ITS-Prediction/
+│
+├── README.md                          # This file
+├── COSMOS_Prediction_Model.ipynb      # Main Jupyter notebook (enhanced)
+├── cosmos_its_1000_students.csv       # Dataset (1000 students)
+│
+├── cosmos_predictor_api.py            # Core prediction API logic
+├── fastapi_app.py                     # FastAPI server for web integration
+│
+├── models/                            # Pre-trained models
+│   ├── rf_enhanced_predictor.joblib   # Random Forest (86.80%)
+│   ├── gb_predictor.joblib            # Gradient Boosting (89.60%) ⭐
+│   ├── mlp_enhanced_predictor.joblib  # MLP Neural Network (88.80%) ⭐
+│   └── feature_scaler.joblib          # Feature scaler for MLP
+│
+├── __pycache__/                       # Python bytecode cache
+│   ├── cosmos_predictor_api.cpython-312.pyc
+│   └── fastapi_app.cpython-312.pyc
+│
+├── image.png                          # Sample confusion matrices
+└── image-1.png                        # Hybrid confusion matrix
+```
+
+---
+
 ## 🔧 Model Details
 
 ### **Random Forest Regressor**
@@ -499,11 +527,21 @@ COSMOS-ITS-Prediction/
 ├── COSMOS_Prediction_Model.ipynb      # Main Jupyter notebook (enhanced)
 ├── cosmos_its_1000_students.csv       # Dataset (1000 students)
 │
-└── models/                            # Pre-trained models
-    ├── rf_enhanced_predictor.joblib   # Random Forest (86.80%)
-    ├── gb_predictor.joblib            # Gradient Boosting (89.60%) ⭐
-    ├── mlp_enhanced_predictor.joblib  # MLP Neural Network (88.80%) ⭐
-    └── feature_scaler.joblib          # Feature scaler for MLP
+├── cosmos_predictor_api.py            # Core prediction API logic
+├── fastapi_app.py                     # FastAPI server for web integration
+│
+├── models/                            # Pre-trained models
+│   ├── rf_enhanced_predictor.joblib   # Random Forest (86.80%)
+│   ├── gb_predictor.joblib            # Gradient Boosting (89.60%) ⭐
+│   ├── mlp_enhanced_predictor.joblib  # MLP Neural Network (88.80%) ⭐
+│   └── feature_scaler.joblib          # Feature scaler for MLP
+│
+├── __pycache__/                       # Python bytecode cache
+│   ├── cosmos_predictor_api.cpython-312.pyc
+│   └── fastapi_app.cpython-312.pyc
+│
+├── image.png                          # Sample confusion matrices
+└── image-1.png                        # Hybrid confusion matrix
 ```
 
 ---
