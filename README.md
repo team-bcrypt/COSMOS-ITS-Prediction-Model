@@ -1,8 +1,10 @@
-﻿# COSMOS-ITS Student Performance Prediction Model 🎓
+# COSMOS-ITS Student Performance Prediction Model 🎓
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.0%2B-orange.svg)](https://scikit-learn.org/)
-
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg)](https://fastapi.tiangolo.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Validation-Verified%20(N%3D250)-success.svg)]()
 
 A machine learning system for predicting student final grades in the **COSMOS Intelligent Tutoring System (ITS)**. This model uses advanced ensemble learning techniques to predict course performance based on historical academic data, current semester progress, and related course correlations.
 
@@ -14,9 +16,11 @@ The system implements **three state-of-the-art machine learning models** with **
 
 | Model | Accuracy | MAE | RMSE | R² Score | Best For |
 |-------|----------|-----|------|----------|----------|
-| **Gradient Boosting** 🥇 | **89.60%** | 0.78 | 0.99 | 0.9916 | Overall predictions (B, B-, C+, C, C-, D+) |
-| **MLP Neural Network** 🥈 | **88.80%** | 0.85 | 1.12 | 0.9895 | **Edge grades (A, A-, D, F)** |
-| **Random Forest** 🥉 | 86.80% | 1.08 | 1.45 | 0.9812 | General predictions |
+| **Complete Hybrid (Proposed)** 🏆 | **90.40%** | **0.38** | **0.50** | **0.9931** | **Overall best performance (combines GB + MLP)** |
+| **Gradient Boosting** 🥇 | **89.60%** | 0.43 | 0.71 | 0.9856 | Stable predictions (B, B-, C+, C, C-, D+) |
+| **MLP Neural Network** 🥈 | **88.80%** | 0.45 | 0.62 | 0.9893 | **Edge grades (A, A-, D, F)** & non-linear patterns |
+| **Equal-weight Ensemble** | 90.00% | 0.38 | 0.54 | 0.9919 | Non-heuristic linear blend (0.5 GB + 0.5 MLP) |
+| **Random Forest** 🥉 | 86.80% | 0.58 | 0.97 | 0.9737 | General tree ensemble predictions |
 
 > **⚡ Hybrid Strategy:** Use **Gradient Boosting** for overall predictions (89.60% accuracy) and **MLP Neural Network** for edge grade predictions (A, A-, D, F) where it excels.
 
@@ -24,7 +28,7 @@ The system implements **three state-of-the-art machine learning models** with **
 
 - **Gradient Boosting**: Excellent for middle-range grades (B through C-) with stable, consistent predictions
 - **MLP Neural Network**: Superior for extreme grades (high performers: A, A- | struggling students: D, F) due to its non-linear pattern recognition
-- **Combined Accuracy**: Achieves **90%+ effective accuracy** by leveraging each model's strengths
+- **Combined Accuracy**: Achieves **90.40% effective accuracy** by leveraging each model's strengths and substantially reducing continuous RMSE (from 0.71 to 0.50)
 
 ---
 
@@ -179,8 +183,7 @@ Predicted Final Exam = (Expected Performance / 100) × 40 + GPA Trend Adjustment
       "assignment": 8,
       "attendance": 5,
       "mid": 24
-    },
-    ...
+    }
   ]
 }
 ```
@@ -189,10 +192,7 @@ Predicted Final Exam = (Expected Performance / 100) × 40 + GPA Trend Adjustment
 
 ## 🚀 Quick Start
 
-
-### **Description of the Prediction Model**
-
-
+### **Description of the Prediction Model Workflow**
 
 #### **Cell 1: Environment Setup**
 ```python
@@ -288,10 +288,23 @@ Predicted Final Exam = (Expected Performance / 100) × 40 + GPA Trend Adjustment
 # Implements hybrid approach combining GB + MLP:
 #   - Uses Gradient Boosting for mid-range grades (B+ to C-)
 #   - Uses MLP for edge grades (A, A-, D, F)
-#   - Achieves 90%+ effective accuracy
+#   - Achieves 90.40% effective accuracy
 #   - Displays model usage statistics
 #   - Shows per-grade performance breakdown
 #   - Generates hybrid confusion matrix
+```
+
+#### **Cell 12b: Gating Mechanism Ablation Study & Statistical Significance** ⚡ *New*
+```python
+# Rigorous ablation isolating each gate mechanism:
+#   1. Standalone Baselines (GB only, MLP only, RF)
+#   2. Generating-Rule Baseline (Target function reconstruction)
+#   3. Equal-weight GB-MLP Ensemble comparator
+#   4. Hybrid without grade-region rule (Pure GB fallback)
+#   5. Hybrid without 95 override
+#   6. Hybrid without momentum correction
+#   7. Complete Hybrid (all rules enabled)
+# Computes Paired Contingency Table, Exact McNemar test, and 10,000-resample Bootstrap 95% CI
 ```
 
 #### **Cell 12.5: Making Predictions on New Data**
@@ -302,29 +315,61 @@ Predicted Final Exam = (Expected Performance / 100) × 40 + GPA Trend Adjustment
 # Outputs predictions with detailed comparison
 ```
 
+#### **Cell 13: Final Visualization Suite** 📊 *New*
+```python
+# Generates publication-ready 300+ DPI figures with enlarged, high-contrast typography:
+#   - Combined 3-Panel Figure 3 for paper
+#   - Multi-class ROC curves and Confusion Matrices
+#   - Load testing latency and throughput graphs
+#   - Feature importances
+#   - Saves vector PDFs and PNGs to ./visualizations/
+```
+
 ---
 
 ## 💻 Usage
 
 Everything is already set up in the Jupyter notebook `COSMOS_Prediction_Model.ipynb`.
-Execute cells **sequentially** in `COSMOS_Prediction_Model.ipynb` to evaluate and use the models.:
+Execute cells **sequentially** in `COSMOS_Prediction_Model.ipynb` to evaluate and use the models:
 
+- Load Models from `./models/` directory:
+```
+  Cell 10.5 
+```
+- Evaluate all Models and Visualizations:
+```
+  Cell 11 
+```
+- Evaluate Hybrid Prediction Strategy:
+```
+  Cell 12  
+```
+- Run Gating Ablation Study & Statistical Tests:
+```
+  Cell 12b
+```
+- Make Predictions on New Data (Hybrid Strategy):
+```
+  Cell 12.5 
+```
+- Generate High-Resolution Publication Figures:
+```
+  Cell 13
+```
 
-- Load Models from `./models/` directory
-```
-  Cells 10.5 
-  ```
-- Evaluate all Models and Visualizations
-```
-  Cells 11 
-  ```
-- Evaluate Hybrid Prediction Strategy
-```
-  Cells 12  
-  ```
-- Make Predictions on New Data (Hybrid Strategy) 
-```
-  Cells 12.5 
+### **Standalone Command-Line Execution**
+
+You can also run all evaluations, ablation benchmarks, and visualization compilations directly from the terminal:
+
+```bash
+# 1. Run the Unified Benchmark, Ablation Study & Significance Tests:
+python ablation_study.py
+
+# 2. Generate 300+ DPI Publication Figures and compile 'Predicted Model FYDP V3.pdf':
+python generate_final_assets.py
+
+# 3. Start the FastAPI Production Prediction Server:
+uvicorn fastapi_app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ---
@@ -335,11 +380,11 @@ Execute cells **sequentially** in `COSMOS_Prediction_Model.ipynb` to evaluate an
 
 ```
 ============================================================
-📊 GRADE PREDICTION ACCURACY COMPARISON
+📊 GRADE PREDICTION ACCURACY COMPARISON (Test Set N = 250)
 ============================================================
-Random Forest:       0.8680 (86.80%)
-Gradient Boosting:   0.8960 (89.60%)  ⭐ Best Overall
-MLP Neural Network:  0.8880 (88.80%)  ⭐ Best for Edge Grades
+Random Forest:       0.8680 (86.80%) | MAE: 0.5827 | RMSE: 0.9660 | R²: 0.9737
+Gradient Boosting:   0.8960 (89.60%) | MAE: 0.4299 | RMSE: 0.7141 | R²: 0.9856  ⭐ Best Mid-Range
+MLP Neural Network:  0.8880 (88.80%) | MAE: 0.4543 | RMSE: 0.6159 | R²: 0.9893  ⭐ Best Edge Grades
 ============================================================
 
 🎯 HYBRID PREDICTION STRATEGY
@@ -347,63 +392,109 @@ MLP Neural Network:  0.8880 (88.80%)  ⭐ Best for Edge Grades
 Strategy: Use GB for overall predictions + MLP for edge grades (A, A-, D, F)
 ======================================================================
 
-
 📊 HYBRID MODEL PERFORMANCE
 ======================================================================
-Hybrid Accuracy: 0.9040 (90.40%)
+Hybrid Accuracy: 0.9040 (90.40%) | MAE: 0.3827 | RMSE: 0.4959 | R²: 0.9931
 ======================================================================
 
 🔧 Model Usage Statistics:
-   Gradient Boosting: 244 predictions (97.6%)
+   Gradient Boosting:  244 predictions (97.6%)
    MLP Neural Network: 6 predictions (2.4%)
 
 ======================================================================
 🏆 MODEL COMPARISON (Including Hybrid)
 ======================================================================
-              Model  Accuracy Accuracy %
-      Random Forest     0.868     86.80%
-  Gradient Boosting     0.896     89.60%
- MLP Neural Network     0.888     88.80%
-🎯 HYBRID (GB + MLP)     0.904     90.40%
+              Model  Grade Acc.    MAE     RMSE       R²
+      Random Forest      86.80% 0.5827   0.9660   0.9737
+ Gradient Boosting      89.60% 0.4299   0.7141   0.9856
+ MLP Neural Network      88.80% 0.4543   0.6159   0.9893
+Equal-weight Ensemble    90.00% 0.3822   0.5373   0.9919
+🎯 HYBRID (GB + MLP)     90.40% 0.3827   0.4959   0.9931
 
-✅ Hybrid approach improves accuracy by 0.80% over best single model!
-
+✅ Hybrid approach achieves 90.40% accuracy and reduces continuous RMSE from 0.71 to 0.50!
 ```
-- Sample Pictures of Confusion Matrix for all models
-![alt text](image.png)
 
-- Hybrid Confusion Matrix
-![alt text](image-1.png)
+- **Sample Pictures of Confusion Matrix for All Models:**
+![Base Models Confusion Matrices](image.png)
+
+- **Complete Hybrid Confusion Matrix:**
+![Hybrid Confusion Matrix](image-1.png)
+
+---
+
+### **Extended Table III: Unified Baseline Benchmark & Gate Ablation Study (N = 250)**
+
+All models and gating configurations evaluated on the identical 250-record held-out testing partition:
+
+| Category | Model / Configuration | Grade Acc. (%) | MAE | RMSE | $R^2$ | Operational Description |
+| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+| **Baselines** | **Generating-Rule Baseline** | **99.20%** | **0.0480** | **0.2191** | **0.9986** | Oracle evaluating deterministic target equation without noise |
+| | **Random Forest (RF)** | 86.80% | 0.5827 | 0.9660 | 0.9737 | Standalone tree ensemble (2,000 estimators) |
+| | **Gradient Boosting (GB)** | 89.60% | 0.4299 | 0.7141 | 0.9856 | Standalone gradient boosting (800 estimators, lr=0.03) |
+| | **MLP Neural Network** | 88.80% | 0.4543 | 0.6159 | 0.9893 | Standalone deep MLP (512→256→128→64, Adam) |
+| **Comparator** | **Equal-weight GB–MLP Ensemble** | 90.00% | 0.3822 | 0.5373 | 0.9919 | Non-heuristic linear blend ($0.5 \cdot \hat{y}_{\text{GB}} + 0.5 \cdot \hat{y}_{\text{MLP}}$) |
+| **Ablations** | **Hybrid w/o Grade Rule** *(Pure GB)* | 89.60% | 0.4299 | 0.7141 | 0.9856 | Pure fallback to GB baseline (verified identical continuous outputs) |
+| | **Hybrid w/o 95 Override** | 90.40% | 0.3827 | 0.4959 | 0.9931 | Disables upper-bound cap when $\|y_{\text{GB}} - y_{\text{MLP}}\| \ge 10$ |
+| | **Hybrid w/o Momentum Correction** | 90.40% | 0.3827 | 0.4959 | 0.9931 | Disables upward adjustment when coursework $> 85\%$ |
+| **Proposed** | **Complete Hybrid Framework** | **90.40%** | **0.3827** | **0.4959** | **0.9931** | Full rule-based gating mechanism with all heuristics active |
+
+---
+
+### **Statistical Significance & Paired Analysis (+0.80% Gain)**
+
+1. **The +0.80% Difference:**
+   The accuracy difference between standalone GB ($89.60\%$) and the Complete Hybrid ($90.40\%$) represents an absolute shift of **exactly two additional correct predictions** among 250 testing instances ($226$ vs. $224$ correct).
+
+2. **Paired $2 \times 2$ Contingency Table:**
+   - **Both Correct:** 223 records (89.20%)
+   - **GB Correct, Hybrid Incorrect ($b$):** 1 record (0.40%)
+   - **GB Incorrect, Hybrid Correct ($c$):** 3 records (1.20%)
+   - **Both Incorrect:** 23 records (9.20%)
+   - **Concordance:** Both models agreed on **246 of 250 instances (98.4%)**. In the 4 discordant instances, the Hybrid model improved 3 and degraded 1 (net gain: $c - b = 2$).
+
+3. **Significance Tests & Confidence Intervals:**
+   - **Exact Two-Sided McNemar Test (Binomial):** $p = 0.6250$ (not statistically significant).
+   - **10,000-Resample Paired Bootstrap 95% CI:** **$[-0.80\%,\ +2.40\%]$** (spans zero).
+   - **Continuous Error Reduction:** Rather than dramatic classification gains, the true engineering benefit of the hybrid gating mechanism is continuous variance reduction, lowering RMSE from $0.7141$ down to **$0.4959$**.
+
+4. **Threshold Selection & Optimistic Bias:**
+   - Disagreement thresholds ($5$ and $10$ marks) correspond to university grade band intervals (a letter grade step is 4–5 marks).
+   - High model divergence ($d \ge 10$) never occurred on the test set ($99.6\%$ had $d < 5$), leaving the 95-override un-triggered. The entire classification gain was driven by the Grade-Region Rule.
+   - Because heuristic thresholds were verified alongside dataset exploration, the results carry potential **optimistic bias**, which is candidly acknowledged in our research report.
+
+---
 
 ### **Sample Predictions (First 20 Students):**
 
-| Actual_Score | Actual_Grade | RF_Pred | RF_Grade | GB_Pred | GB_Grade | MLP_Pred | MLP_Grade |
-|--------------|--------------|---------|----------|---------|----------|----------|-----------|
-| 92.0         | A            | 85.1    | B+       | 86.8    | A-       | **93.2** | **A**     |
-| 69.0         | C            | 69.7    | C        | 69.5    | C        | 69.4     | C         |
-| 75.0         | B-           | 75.7    | B-       | 75.1    | B-       | 74.9     | B-        |
-| 73.0         | C+           | 72.8    | C+       | 72.4    | C+       | 72.9     | C+        |
-| 68.0         | C            | 68.4    | C        | 68.5    | C        | 67.9     | C         |
-| 64.0         | C-           | 63.3    | C-       | 63.4    | C-       | 63.0     | C-        |
-| 75.0         | B-           | 75.8    | B-       | 75.4    | B-       | 75.4     | B-        |
-| 67.0         | C            | 67.4    | C        | 66.8    | C        | 67.3     | C         |
-| 69.0         | C            | 69.5    | C        | 69.9    | C        | 69.7     | C         |
-| 79.0         | B            | 78.6    | B        | 79.4    | B        | 79.1     | B         |
-| 85.0         | B+           | 82.8    | B+       | 84.8    | B+       | 85.3     | B+        |
-| 75.0         | B-           | 74.1    | B-       | 74.4    | B-       | 75.6     | B-        |
-| 74.0         | B-           | 74.1    | B-       | 73.7    | C+       | 74.0     | C+        |
-| 67.0         | C            | 66.8    | C        | 66.8    | C        | 66.3     | C         |
-| 68.0         | C            | 68.0    | C        | 67.7    | C        | 67.3     | C         |
-| 66.0         | C            | 66.1    | C        | 66.1    | C        | 67.3     | C         |
-| 71.0         | C+           | 71.4    | C+       | 71.1    | C+       | 70.9     | C+        |
-| 72.0         | C+           | 71.8    | C+       | 72.2    | C+       | 72.0     | C+        |
-| 62.0         | C-           | 62.2    | C-       | 61.7    | D+       | 61.7     | D+        |
-| 75.0         | B-           | 75.3    | B-       | 74.7    | B-       | 74.9     | B-        |
+| Actual_Score | Actual_Grade | RF_Pred | RF_Grade | GB_Pred | GB_Grade | MLP_Pred | MLP_Grade | Hybrid_Pred | Hybrid_Grade |
+|--------------|--------------|---------|----------|---------|----------|----------|-----------|-------------|--------------|
+| 92.0         | A            | 85.1    | B+       | 86.8    | A-       | **93.2** | **A**     | **93.2**    | **A**        |
+| 69.0         | C            | 69.7    | C        | 69.5    | C        | 69.4     | C         | 69.5        | C            |
+| 75.0         | B-           | 75.7    | B-       | 75.1    | B-       | 74.9     | B-        | 75.1        | B-           |
+| 73.0         | C+           | 72.8    | C+       | 72.4    | C+       | 72.9     | C+        | 72.4        | C+           |
+| 68.0         | C            | 68.4    | C        | 68.5    | C        | 67.9     | C         | 68.5        | C            |
+| 64.0         | C-           | 63.3    | C-       | 63.4    | C-       | 63.0     | C-        | 63.4        | C-           |
+| 75.0         | B-           | 75.8    | B-       | 75.4    | B-       | 75.4     | B-        | 75.4        | B-           |
+| 67.0         | C            | 67.4    | C        | 66.8    | C        | 67.3     | C         | 66.8        | C            |
+| 69.0         | C            | 69.5    | C        | 69.9    | C        | 69.7     | C         | 69.9        | C            |
+| 79.0         | B            | 78.6    | B        | 79.4    | B        | 79.1     | B         | 79.4        | B            |
+| 85.0         | B+           | 82.8    | B+       | 84.8    | B+       | 85.3     | B+        | 84.8        | B+           |
+| 75.0         | B-           | 74.1    | B-       | 74.4    | B-       | 75.6     | B-        | 74.4        | B-           |
+| 74.0         | B-           | 74.1    | B-       | 73.7    | C+       | 74.0     | C+        | 73.7        | C+           |
+| 67.0         | C            | 66.8    | C        | 66.8    | C        | 66.3     | C         | 66.8        | C            |
+| 68.0         | C            | 68.0    | C        | 67.7    | C        | 67.3     | C         | 67.7        | C            |
+| 66.0         | C            | 66.1    | C        | 66.1    | C        | 67.3     | C         | 66.1        | C            |
+| 71.0         | C+           | 71.4    | C+       | 71.1    | C+       | 70.9     | C+        | 71.1        | C+           |
+| 72.0         | C+           | 71.8    | C+       | 72.2    | C+       | 72.0     | C+        | 72.2        | C+           |
+| 62.0         | C-           | 62.2    | C-       | 61.7    | D+       | 61.7     | D+        | 61.7        | D+           |
+| 75.0         | B-           | 75.3    | B-       | 74.7    | B-       | 74.9     | B-        | 74.7        | B-           |
 
 **Key Observations:**
 - ✅ **MLP excels at A-grade prediction** (row 1: 93.2 vs GB's 86.8)
 - ✅ **GB consistent across B-C range** (rows 2-20)
 - ✅ **Both models stable for mid-range grades** (±1 mark error)
+
+---
 
 ### **Model Performance by Grade Category:**
 
@@ -459,34 +550,6 @@ D        2       0.8%
 
 ---
 
-## 📂 Project Structure
-
-```
-COSMOS-ITS-Prediction/
-│
-├── README.md                          # This file
-├── COSMOS_Prediction_Model.ipynb      # Main Jupyter notebook (enhanced)
-├── cosmos_its_1000_students.csv       # Dataset (1000 students)
-│
-├── cosmos_predictor_api.py            # Core prediction API logic
-├── fastapi_app.py                     # FastAPI server for web integration
-│
-├── models/                            # Pre-trained models
-│   ├── rf_enhanced_predictor.joblib   # Random Forest (86.80%)
-│   ├── gb_predictor.joblib            # Gradient Boosting (89.60%) ⭐
-│   ├── mlp_enhanced_predictor.joblib  # MLP Neural Network (88.80%) ⭐
-│   └── feature_scaler.joblib          # Feature scaler for MLP
-│
-├── __pycache__/                       # Python bytecode cache
-│   ├── cosmos_predictor_api.cpython-312.pyc
-│   └── fastapi_app.cpython-312.pyc
-│
-├── image.png                          # Sample confusion matrices
-└── image-1.png                        # Hybrid confusion matrix
-```
-
----
-
 ## 🔧 Model Details
 
 ### **Random Forest Regressor**
@@ -495,7 +558,8 @@ COSMOS-ITS-Prediction/
 - **Min Samples Split:** 2 *(optimized from 3)*
 - **Min Samples Leaf:** 1 *(optimized from 2)*
 - **Max Features:** sqrt
-- **Cross-validation R²:** 0.9812 (±0.0028)
+- **Cross-validation R²:** 0.9805 (±0.0031)
+- **Test Performance:** Accuracy: 86.80% | MAE: 0.5827 | RMSE: 0.9660 | R²: 0.9737
 
 ### **Gradient Boosting Regressor** ⭐ Best Overall
 - **Estimators:** 800 *(enhanced from 500)*
@@ -504,7 +568,8 @@ COSMOS-ITS-Prediction/
 - **Min Samples Split:** 2
 - **Min Samples Leaf:** 1
 - **Subsample:** 0.85 *(optimized from 0.8)*
-- **Cross-validation R²:** 0.9916 (±0.0015)
+- **Cross-validation R²:** 0.9907 (±0.0013)
+- **Test Performance:** Accuracy: 89.60% | MAE: 0.4299 | RMSE: 0.7141 | R²: 0.9856
 
 ### **MLP Neural Network** ⭐ Best for Edge Grades
 - **Architecture:** 512 → 256 → 128 → 64 *(enhanced from 256→128→64→32)*
@@ -515,6 +580,7 @@ COSMOS-ITS-Prediction/
 - **Max Iterations:** 5000 *(enhanced from 3000)*
 - **Early Stopping:** Enabled (validation_fraction=0.15)
 - **Regularization:** L2 (alpha=0.0005, reduced from 0.001)
+- **Test Performance:** Accuracy: 88.80% | MAE: 0.4543 | RMSE: 0.6159 | R²: 0.9893
 
 ---
 
@@ -523,12 +589,16 @@ COSMOS-ITS-Prediction/
 ```
 COSMOS-ITS-Prediction/
 │
-├── README.md                          # This file
-├── COSMOS_Prediction_Model.ipynb      # Main Jupyter notebook (enhanced)
-├── cosmos_its_1000_students.csv       # Dataset (1000 students)
+├── .gitignore                         # Git exclusion rules
+├── README.md                          # Comprehensive documentation & evaluation report
+├── COSMOS_Prediction_Model.ipynb      # Main Jupyter notebook (enhanced workflow)
+├── cosmos_its_1000_students.csv       # Dataset (1000 synthetic student records)
 │
-├── cosmos_predictor_api.py            # Core prediction API logic
+├── cosmos_predictor_api.py            # Core prediction API logic with ablation support
 ├── fastapi_app.py                     # FastAPI server for web integration
+├── ablation_study.py                  # Standalone ablation & statistical significance script
+├── generate_final_assets.py           # Publication-ready figure & PDF compilation engine
+├── Predicted Model FYDP V3.pdf        # Camera-ready multi-page technical report (V3)
 │
 ├── models/                            # Pre-trained models
 │   ├── rf_enhanced_predictor.joblib   # Random Forest (86.80%)
@@ -536,12 +606,18 @@ COSMOS-ITS-Prediction/
 │   ├── mlp_enhanced_predictor.joblib  # MLP Neural Network (88.80%) ⭐
 │   └── feature_scaler.joblib          # Feature scaler for MLP
 │
-├── __pycache__/                       # Python bytecode cache
-│   ├── cosmos_predictor_api.cpython-312.pyc
-│   └── fastapi_app.cpython-312.pyc
+├── visualizations/                    # 300+ DPI publication figures (PNG + Vector PDF)
+│   ├── 01_fig3_combined_academic_analytics.[pdf/png]
+│   ├── 02_fig3a_model_accuracy_comparison.[pdf/png]
+│   ├── 03_fig3b_multiclass_roc_curves.[pdf/png]
+│   ├── 04_fig3c_hybrid_confusion_matrix.[pdf/png]
+│   ├── 05_fig_gating_ablation_analysis.[pdf/png]
+│   ├── 06_fig_base_models_confusion_matrices.[pdf/png]
+│   ├── 07_fig_feature_importances.[pdf/png]
+│   └── 08_fig_load_testing_performance.[pdf/png]
 │
-├── image.png                          # Sample confusion matrices
-└── image-1.png                        # Hybrid confusion matrix
+├── image.png                          # Sample confusion matrices (high-res)
+└── image-1.png                        # Hybrid confusion matrix (high-res)
 ```
 
 ---
@@ -578,6 +654,9 @@ For questions or support:
 - [x] **Optimized model hyperparameters** (2000 RF trees, 800 GB estimators, 512-unit MLP)
 - [x] **Hybrid prediction strategy** (GB for overall, MLP for edge grades)
 - [x] **20-feature engineering** (added curr_percentage, cgpa_scaled)
+- [x] **Gating ablation study & statistical significance** (McNemar test, 10,000 bootstrap CI)
+- [x] **Generating-rule baseline integration** (target reconstruction confirmation)
+- [x] **Camera-ready high-resolution publication figures** (300+ DPI, legible typography)
 - [ ] Multi-course simultaneous prediction
 - [ ] Real-time performance tracking dashboard
 - [ ] Integration with COSMOS-ITS platform
@@ -592,5 +671,4 @@ For questions or support:
 
 **Made with ❤️ for better student outcomes**
 
-**Latest Update:** December 2025 - Achieved ~90% effective accuracy with hybrid prediction strategy 🎉
-
+**Latest Update:** November 2026 - Achieved 90.40% effective accuracy with verified hybrid prediction strategy 🎉

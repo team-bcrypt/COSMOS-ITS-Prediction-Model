@@ -86,7 +86,7 @@ def root():
         "docs_url": "/docs"
     }
 
-@app.post("/predict")
+@app.post("/api/v1/prediction/predict")
 def predict_student_grade(request: PredictionRequest):
     """
     Predict the final grade for a student based on current performance and history.

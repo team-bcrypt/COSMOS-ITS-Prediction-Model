@@ -416,9 +416,22 @@ def build_feature_vector(
     return pd.DataFrame([features])[FEATURE_COLS]
 
 
-def predict_with_hybrid(feature_vector: pd.DataFrame, models: ModelLoader) -> Dict:
+def predict_with_hybrid(
+    feature_vector: pd.DataFrame,
+    models: ModelLoader,
+    enable_grade_region: bool = True,
+    enable_95_override: bool = True,
+    enable_momentum: bool = True
+) -> Dict:
     """
-    Layer 1: Base prediction using hybrid GB + MLP strategy
+    Layer 1: Base prediction using hybrid GB + MLP strategy with ablation support
+    
+    Args:
+        feature_vector: DataFrame with 20 features
+        models: ModelLoader instance
+        enable_grade_region: Whether to route edge grades (A, A-, D, F) to MLP (False defaults to GB)
+        enable_95_override: Whether to apply >=95% high-performance override on low confidence
+        enable_momentum: Whether to apply upward momentum boost for high current performers
     
     Returns:
         Dict with prediction, grade, confidence, and model used
@@ -465,7 +478,7 @@ def predict_with_hybrid(feature_vector: pd.DataFrame, models: ModelLoader) -> Di
         
         # High Performance Override: If marks are very close to max (>= 95%), pick the higher prediction
         # This covers cases like 57-60/60 (Theory) or high Lab scores.
-        if current_perf >= 95.0:
+        if enable_95_override and current_perf >= 95.0:
             if gb_pred > mlp_pred:
                 final_score = gb_pred
                 model_used = "Gradient Boosting (High Perf Override)"
@@ -485,7 +498,7 @@ def predict_with_hybrid(feature_vector: pd.DataFrame, models: ModelLoader) -> Di
             
     # 2. Standard Hybrid Strategy (High/Medium Confidence)
     else:
-        if mlp_grade in edge_grades:
+        if enable_grade_region and (mlp_grade in edge_grades):
             final_score = mlp_pred
             model_used = "MLP Neural Network"
         else:
@@ -501,7 +514,7 @@ def predict_with_hybrid(feature_vector: pd.DataFrame, models: ModelLoader) -> Di
     
     current_perf = feature_vector["curr_percentage"].values[0]
     
-    if current_perf > 85.0 and final_score < (current_perf - 5.0):
+    if enable_momentum and current_perf > 85.0 and final_score < (current_perf - 5.0):
         # Calculate momentum boost
         # We trust current performance more when it's high
         momentum_factor = 0.8  
